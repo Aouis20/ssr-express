@@ -1,13 +1,29 @@
-import * as React from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Task from './components/Task';
 
-export default function App() {
-  const [times, setTimes] = React.useState(0);
+const App = () => {
+  const [tasks, setTasks] = useState([]);
 
-  // Rendu du composant
+  useEffect(() => {
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
-    <div>
-      <h1>Hello {times}</h1>
-      <button onClick={() => setTimes((times) => times + 1)}>ADD</button>
+    <div className='container'>
+      <ul>
+        {tasks.map((task) => (
+          <Task key={task.id} task={task} />
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default App;
